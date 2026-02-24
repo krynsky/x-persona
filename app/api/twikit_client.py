@@ -16,7 +16,7 @@ class TwikitProvider(XAPIProvider):
 
     def __init__(self):
         self.client = Client('en-US')
-        self.cookies_path = Path(os.getenv("TWIKIT_COOKIES_PATH", str(BASE_DIR / "browser_session" / "cookies.json")))
+        self.cookies_path = Path(os.getenv("COOKIES_PATH", os.getenv("TWIKIT_COOKIES_PATH", str(BASE_DIR / "browser_session" / "cookies.json"))))
         self._logged_in = False
 
     async def _ensure_login(self):
