@@ -110,9 +110,15 @@ async def home(request: Request):
 @limiter.limit(f"{RATE_LIMIT}/hour")
 async def request_profile(request: Request, username: str = Form(...)):
     """Public: submit a username request. Queues into profile_requests for admin to action."""
+    import re
     clean = username.strip().lstrip("@").lower()
-    if not clean:
-        return RedirectResponse("/", status_code=303)
+    if not clean or not re.match(r'^[a-z0-9_]{1,50}$', clean):
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            "error": "Invalid username. X usernames can only contain letters, numbers, and underscores.",
+            "recent_profiles": [],
+            "app_name": APP_NAME,
+        })
 
     async with async_session() as db:
         # Check if a complete profile already exists
@@ -203,7 +209,18 @@ async def admin_analyze_profile(request: Request, username: str = Form(...)):
 
 async def _run_analysis(request: Request, clean: str, redirect_to_admin: bool = False):
     """Shared analysis logic used by both admin analyze routes."""
+    import re
     error_redirect = "/admin" if redirect_to_admin else "/"
+
+    if not clean or not re.match(r'^[a-z0-9_]{1,50}$', clean):
+        if redirect_to_admin:
+            return RedirectResponse("/admin?error=Invalid+username+format", status_code=303)
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            "error": "Invalid username. X usernames can only contain letters, numbers, and underscores.",
+            "recent_profiles": [],
+            "app_name": APP_NAME,
+        })
 
     try:
         provider = get_provider()

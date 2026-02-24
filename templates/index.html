@@ -24,7 +24,7 @@
     <form action="/analyze" method="POST" class="search-form" id="analyze-form">
         <div class="search-box">
             <span class="search-at">@</span>
-            <input type="text" name="username" placeholder="username" required class="search-input" autocomplete="off" autofocus>
+            <input type="text" name="username" placeholder="username" required class="search-input" autocomplete="off" autofocus pattern="@?[A-Za-z0-9_]{1,50}" maxlength="51" title="X usernames can only contain letters, numbers, and underscores (no spaces).">
             <button type="submit" class="search-btn" id="analyze-btn">
                 <span class="btn-label">Analyze</span>
                 <span class="btn-loading-content">
@@ -39,7 +39,7 @@
     <form action="/request" method="POST" class="search-form" id="analyze-form">
         <div class="search-box">
             <span class="search-at">@</span>
-            <input type="text" name="username" placeholder="username" required class="search-input" autocomplete="off" autofocus>
+            <input type="text" name="username" placeholder="username" required class="search-input" autocomplete="off" autofocus pattern="@?[A-Za-z0-9_]{1,50}" maxlength="51" title="X usernames can only contain letters, numbers, and underscores (no spaces).">
             <button type="submit" class="search-btn" id="analyze-btn">
                 <span class="btn-label">Request</span>
                 <span class="btn-loading-content">
