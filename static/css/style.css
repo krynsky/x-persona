@@ -64,7 +64,7 @@ a:hover { color: #4db8ff; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
+    height: 64px;
 }
 
 .nav-brand {
@@ -75,7 +75,7 @@ a:hover { color: #4db8ff; }
 .nav-brand:hover { opacity: 0.85; }
 
 .nav-logo {
-    height: 68px;
+    height: 48px;
     width: auto;
     display: block;
 }
