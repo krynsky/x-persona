@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header" style="margin-bottom: 10px;">
+        <h1 class="section-title">Admin Dashboard</h1>
+        <a href="/admin/logout" class="btn-logout">Logout</a>
+    </div>
+    <p class="hero-sub" style="margin-bottom: 40px;">Manage cached profiles and view system configuration.</p>
+
+    {% if request.query_params.get('saved') %}
+    <div class="alert alert-success" style="margin-bottom: 24px;">&#10003; API configuration saved successfully.</div>
+    {% endif %}
+    {% if error %}
+    <div class="alert alert-error" style="margin-bottom: 24px;">⚠️ {{ error }}</div>
+    {% endif %}
+
+    <!-- System Info Cards -->
+    <div class="admin-grid">
+        <div class="admin-card">
+            <div class="admin-card-label">API Provider</div>
+            <div class="admin-card-value">{{ provider | upper }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Cache TTL</div>
+            <div class="admin-card-value">{{ cache_ttl }} days</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Rate Limit</div>
+            <div class="admin-card-value">{{ rate_limit }}/hr</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Total Profiles</div>
+            <div class="admin-card-value">{{ total_profiles }}</div>
+        </div>
+    </div>
+
+    <!-- Admin Analyze Form -->
+    <h2 class="section-title" style="margin-top: 50px; margin-bottom: 16px;">Analyze a Profile</h2>
+    <div class="config-card" style="padding: 24px 32px;">
+        <form action="/analyze" method="POST" class="search-form" id="admin-analyze-form" style="margin: 0;">
+            <div class="search-box">
+                <span class="search-at">@</span>
+                <input type="text" name="username" placeholder="username" required class="search-input" autocomplete="off">
+                <button type="submit" class="search-btn" id="admin-analyze-btn">
+                    <span class="btn-label">Analyze</span>
+                    <span class="btn-loading-content">
+                        <span class="btn-spinner" aria-hidden="true"></span>
+                        <span class="btn-loading-text">Analyzing</span>
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Twikit Cookie Upload -->
+    <h2 class="section-title" style="margin-top: 50px; margin-bottom: 8px;">Twikit Cookies</h2>
+    <p class="hero-sub" style="margin-bottom: 20px;">Upload a fresh <code>cookies.json</code> when your X session expires.</p>
+    <div class="config-card" style="padding: 24px 32px;">
+        {% if request.query_params.get('cookies_saved') %}
+        <div class="alert alert-success" style="margin-bottom: 16px;">&#10003; cookies.json updated successfully.</div>
+        {% endif %}
+        {% if request.query_params.get('cookies_error') %}
+        <div class="alert alert-error" style="margin-bottom: 16px;">⚠️ {{ request.query_params.get('cookies_error') }}</div>
+        {% endif %}
+        <form action="/admin/upload-cookies" method="POST" enctype="multipart/form-data" style="display:flex; align-items:center; gap: 16px; flex-wrap: wrap;">
+            <input type="file" name="cookies_file" accept=".json" required class="cookie-file-input">
+            <button type="submit" class="btn-analyze" style="white-space: nowrap;">Upload cookies.json</button>
+        </form>
+        <p class="config-hint" style="margin-top: 12px; margin-bottom: 0;">Cookie file is stored on the server only — it is never committed to GitHub.</p>
+    </div>
+
+    <!-- X API Configuration -->
+    <h2 class="section-title" style="margin-top: 50px; margin-bottom: 20px;">X API Configuration</h2>
+    <div class="config-card">
+        <form action="/admin/save-api-config" method="POST">
+            <div class="config-row">
+                <div class="config-field">
+                    <label class="config-label" for="x_api_provider">API Provider</label>
+                    <p class="config-hint">Use <strong>twikit</strong> for local development (cookie-based). Use <strong>official</strong> for production (Bearer Token required).</p>
+                    <div class="config-radio-group">
+                        <label class="config-radio">
+                            <input type="radio" name="x_api_provider" value="twikit" {% if provider == 'twikit' %}checked{% endif %}>
+                            <span class="config-radio-label">
+                                <span class="config-radio-title">Twikit</span>
+                                <span class="config-radio-desc">Local dev — uses browser cookies</span>
+                            </span>
+                        </label>
+                        <label class="config-radio">
+                            <input type="radio" name="x_api_provider" value="official" {% if provider == 'official' %}checked{% endif %}>
+                            <span class="config-radio-label">
+                                <span class="config-radio-title">Official X API v2</span>
+                                <span class="config-radio-desc">Production — uses Bearer Token</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="config-row" style="margin-top: 24px;">
+                <div class="config-field">
+                    <label class="config-label" for="x_api_bearer_token">Bearer Token</label>
+                    <p class="config-hint">Required when using the Official X API v2 provider. Found in your X Developer Console under App &rarr; App-Only Authentication.</p>
+                    <input
+                        type="password"
+                        id="x_api_bearer_token"
+                        name="x_api_bearer_token"
+                        value="{{ bearer_token }}"
+                        placeholder="AAAA...your bearer token..."
+                        class="config-input"
+                        autocomplete="off"
+                    >
+                    <button type="button" class="config-toggle-btn" onclick="toggleToken()">Show</button>
+                </div>
+            </div>
+            <div class="config-actions">
+                <button type="submit" class="config-save-btn">Save Configuration</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Pending Requests Table -->
+    <div class="section-header" style="margin-top: 50px; margin-bottom: 16px;">
+        <h2 class="section-title">Pending Requests</h2>
+        {% if pending_requests > 0 %}
+        <span class="section-count pending-count">{{ pending_requests }} pending</span>
+        {% endif %}
+    </div>
+    {% if requested_profiles %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Requested</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in requested_profiles %}
+                <tr>
+                    <td class="bold">@{{ p.username }}</td>
+                    <td class="dim">{{ p.created_at | format_datetime }}</td>
+                    <td>
+                        <form action="/admin/analyze-profile" method="POST" style="display: inline;" id="req-form-{{ p.username }}"
+                            onsubmit="markAnalyzing('{{ p.username }}')">
+                            <input type="hidden" name="username" value="{{ p.username }}">
+                            <button type="submit" class="btn-analyze">Analyze</button>
+                        </form>
+                        <form action="/admin/delete-request" method="POST" style="display: inline;"
+                            onsubmit="return confirm('Delete request for @{{ p.username }}?')">
+                            <input type="hidden" name="username" value="{{ p.username }}">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state" style="padding: 30px 0;">
+        <h3 style="font-size: 15px; color: var(--text-dim);">No pending requests</h3>
+    </div>
+    {% endif %}
+
+    <!-- Cached Profiles Table -->
+    <h2 class="section-title" style="margin-top: 50px; margin-bottom: 16px;">Cached Profiles</h2>
+    {% if complete_profiles %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Lists</th>
+                    <th>Last Updated</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in complete_profiles %}
+                <tr>
+                    <td class="bold"><a href="/@{{ p.username }}" class="table-link">@{{ p.username }}</a></td>
+                    <td>{{ p.membership_count }}</td>
+                    <td class="dim">{{ p.updated_at | format_datetime }}</td>
+                    <td>
+                        {% if p.is_stale %}
+                        <span class="status-badge status-stale">Stale</span>
+                        {% else %}
+                        <span class="status-badge status-fresh">Fresh</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="/admin/analyze-profile" method="POST" style="display: inline;"
+                            id="refresh-form-{{ p.username }}"
+                            onsubmit="markRefreshing('{{ p.username }}')">
+                            <input type="hidden" name="username" value="{{ p.username }}">
+                            <button type="submit" class="btn-refresh">Refresh</button>
+                        </form>
+                        <form action="/admin/delete-profile" method="POST" style="display: inline;"
+                            onsubmit="return confirm('Delete @{{ p.username }}?')">
+                            <input type="hidden" name="username" value="{{ p.username }}">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <h3>No profiles cached yet</h3>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleToken() {
+    const input = document.getElementById('x_api_bearer_token');
+    const btn = document.querySelector('.config-toggle-btn');
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = 'Hide';
+    } else {
+        input.type = 'password';
+        btn.textContent = 'Show';
+    }
+}
+
+function markAnalyzing(username) {
+    const btn = document.querySelector(`#req-form-${username} .btn-analyze`);
+    if (btn) {
+        btn.textContent = 'Analyzing...';
+        btn.disabled = true;
+    }
+}
+
+function markRefreshing(username) {
+    const btn = document.querySelector(`#refresh-form-${username} .btn-refresh`);
+    if (btn) {
+        btn.textContent = 'Refreshing...';
+        btn.disabled = true;
+    }
+}
+
+document.getElementById('admin-analyze-form').addEventListener('submit', function() {
+    const btn = document.getElementById('admin-analyze-btn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+});
+</script>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}@{{ profile.username }} — {{ app_name }}{% endblock %}
+{% block meta_description %}See how @{{ profile.username }} is categorized across {{ profile.membership_count }} X
+community lists.{% endblock %}
+{% block og_title %}@{{ profile.username }} — {{ app_name }}{% endblock %}
+{% block og_description %}{{ profile.membership_count }} list memberships analyzed. See the interactive word cloud.{%
+endblock %}
+
+{% block content %}
+{% if error %}
+<div class="section" style="text-align: center; padding: 80px 20px;">
+    <h1 class="hero-title" style="font-size: 32px;">Profile Not Found</h1>
+    <p class="hero-sub">{{ error }}</p>
+    <a href="/" class="search-btn" style="display: inline-block; margin-top: 20px; text-decoration: none;">← Back to
+        Search</a>
+</div>
+{% else %}
+<div class="profile-hero">
+    <div class="profile-header">
+        <div class="profile-identity">
+            {% if profile.profile_image_url %}
+            <img src="{{ profile.profile_image_url }}" alt="@{{ profile.username }}" class="profile-avatar">
+            {% else %}
+            <div class="profile-avatar profile-avatar-placeholder">{{ profile.username[0] | upper }}</div>
+            {% endif %}
+            <div>
+                <div class="profile-label">COMMUNITY ANALYSIS FOR</div>
+                <h1 class="profile-username">@{{ profile.username }}</h1>
+                {% if profile.bio %}
+                <p class="profile-bio">{{ profile.bio }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="profile-stats">
+            <a href="#memberships" class="stat-number">{{ profile.membership_count }}</a>
+            <a href="#memberships" class="stat-label">LIST MEMBERSHIPS ↓</a>
+            <a href="https://x.com/{{ profile.username }}/lists_memberships" target="_blank" class="stat-link">VIEW ON X ↗</a>
+            <div class="stat-analyzed">Analyzed {{ profile.updated_at | format_date_short }}</div>
+        </div>
+    </div>
+
+    <!-- Word Cloud -->
+    <div id="word_cloud" class="cloud-container">
+        {% for word, score in (profile.word_scores | dictsort(by='value', reverse=true)) %}
+        <span class="cloud-word" data-word="{{ word }}" data-score="{{ score }}"
+            onclick="showListsForWord('{{ word }}')"
+            style="font-size: {{ [14, [36, 14 + (score * 3)] | min] | max }}px;">
+            {{ word }}
+        </span>
+        {% endfor %}
+    </div>
+
+    <!-- Drill-down panel -->
+    <div id="drill_down" class="drill-panel" style="display: none;">
+        <div class="drill-header">
+            <span id="drill_word" class="drill-tag"></span>
+            <span id="drill_count" class="drill-count"></span>
+            <button onclick="closeDrillDown()" class="drill-close">✕</button>
+        </div>
+        <div id="drill_lists" class="drill-body">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <a href="#memberships" class="scroll-hint">
+        All {{ profile.membership_count }} list memberships ↓
+    </a>
+</div>
+
+<!-- All Memberships Table -->
+<section class="section" id="memberships">
+    <div class="memberships-header">
+        <div>
+            <h2 class="section-title" style="margin-bottom: 4px;">List Memberships</h2>
+            <p class="memberships-sub">The {{ profile.membership_count }} X lists that @{{ profile.username }} appears in</p>
+        </div>
+        <input type="text" id="membership-search" class="membership-search" placeholder="Filter lists…" oninput="filterMemberships(this.value)">
+    </div>
+    <div class="table-wrap">
+        <table class="data-table" id="memberships-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>List Name</th>
+                    <th>Owner</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in profile.memberships %}
+                <tr class="membership-row">
+                    <td class="dim">{{ loop.index }}</td>
+                    <td class="bold">{{ m.name }}</td>
+                    <td class="dim">@{{ m.owner }}</td>
+                    <td><a href="https://x.com/i/lists/{{ m.id }}" target="_blank" class="table-link">View ↗</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p id="no-results" class="no-results" style="display:none;">No lists match that filter.</p>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/cloud.js"></script>
+<script>
+    const PROFILE_USERNAME = "{{ profile.username if profile else '' }}";
+
+    function filterMemberships(query) {
+        const rows = document.querySelectorAll('.membership-row');
+        const q = query.toLowerCase();
+        let visible = 0;
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            const show = text.includes(q);
+            row.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+        document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

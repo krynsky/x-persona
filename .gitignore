@@ -1,0 +1,37 @@
+﻿# Environment variables - contains secrets, NEVER commit
+.env
+
+# Database - contains user data, excluded from repo
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Twikit cookies - personal X session, NEVER commit
+browser_session/
+cookies.json
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Migration scripts - one-off, not needed in repo
+migrate_*.py
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Helper scripts
+write_files.ps1
+*.swo

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}All Profiles — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1 class="section-title">All Analyzed Profiles</h1>
+        <span class="section-count">{{ profiles | length }} profiles</span>
+    </div>
+
+    {% if profiles %}
+    <div class="profile-grid">
+        {% for p in profiles %}
+        <a href="/@{{ p.username }}" class="profile-card">
+            <div class="profile-card-header">
+                <div class="profile-card-identity">
+                    {% if p.profile_image_url %}
+                    <img src="{{ p.profile_image_url }}" alt="@{{ p.username }}" class="profile-card-avatar">
+                    {% else %}
+                    <div class="profile-card-avatar profile-card-avatar-placeholder">{{ p.username[0] | upper }}</div>
+                    {% endif %}
+                    <span class="profile-card-at">@{{ p.username }}</span>
+                </div>
+                <span class="profile-card-badge">{{ p.membership_count }} lists</span>
+            </div>
+            {% if p.bio %}
+            <p class="profile-card-bio">{{ p.bio }}</p>
+            {% endif %}
+            <div class="profile-card-words">
+                {% for word, score in (p.word_scores | dictsort(by='value', reverse=true))[:5] %}
+                <span class="mini-tag">{{ word }}</span>
+                {% endfor %}
+            </div>
+            <div class="profile-card-date">{{ p.updated_at | format_datetime }}</div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <h3>No profiles yet</h3>
+        <p>Analyze your first X account from the <a href="/">home page</a>.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

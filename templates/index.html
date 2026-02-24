@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}{{ app_name }} — Discover Any X Account's Persona{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1 class="hero-title">Discover your X Account's <span class="accent">Persona</span></h1>
+    <p class="hero-sub">See how the X community categorizes any account<br>through their list memberships.</p>
+
+    {% if error %}
+    <div class="alert alert-error">⚠️ {{ error }}</div>
+    {% endif %}
+    {% if info %}
+    <div class="alert alert-info">
+        {{ info }}
+        {% if profile_link %}
+        <a href="{{ profile_link }}" class="alert-link">{{ profile_link_label }} →</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if is_admin(request) %}
+    {# Admin: full analyze form #}
+    <form action="/analyze" method="POST" class="search-form" id="analyze-form">
+        <div class="search-box">
+            <span class="search-at">@</span>
+            <input type="text" name="username" placeholder="username" required class="search-input" autocomplete="off" autofocus>
+            <button type="submit" class="search-btn" id="analyze-btn">
+                <span class="btn-label">Analyze</span>
+                <span class="btn-loading-content">
+                    <span class="btn-spinner" aria-hidden="true"></span>
+                    <span class="btn-loading-text">Analyzing</span>
+                </span>
+            </button>
+        </div>
+    </form>
+    {% else %}
+    {# Public: request form #}
+    <form action="/request" method="POST" class="search-form" id="analyze-form">
+        <div class="search-box">
+            <span class="search-at">@</span>
+            <input type="text" name="username" placeholder="username" required class="search-input" autocomplete="off" autofocus>
+            <button type="submit" class="search-btn" id="analyze-btn">
+                <span class="btn-label">Request</span>
+                <span class="btn-loading-content">
+                    <span class="btn-spinner" aria-hidden="true"></span>
+                    <span class="btn-loading-text">Requesting</span>
+                </span>
+            </button>
+        </div>
+    </form>
+    <p class="hero-hint-sub">Don't see an account? Request it and we'll generate the persona.</p>
+    {% endif %}
+
+</div>
+
+{% block scripts %}
+<script>
+document.getElementById('analyze-form').addEventListener('submit', function() {
+    const btn = document.getElementById('analyze-btn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+});
+</script>
+{% endblock %}
+
+{% if recent_profiles %}
+<section class="section">
+    <h2 class="section-title">Recently Analyzed</h2>
+    <div class="profile-grid">
+        {% for p in recent_profiles %}
+        <a href="/@{{ p.username }}" class="profile-card">
+            <div class="profile-card-header">
+                <div class="profile-card-identity">
+                    {% if p.profile_image_url %}
+                    <img src="{{ p.profile_image_url }}" alt="@{{ p.username }}" class="profile-card-avatar">
+                    {% else %}
+                    <div class="profile-card-avatar profile-card-avatar-placeholder">{{ p.username[0] | upper }}</div>
+                    {% endif %}
+                    <span class="profile-card-at">@{{ p.username }}</span>
+                </div>
+                <span class="profile-card-badge">{{ p.membership_count }} lists</span>
+            </div>
+            <div class="profile-card-words">
+                {% for word, score in (p.word_scores | dictsort(by='value', reverse=true))[:5] %}
+                <span class="mini-tag">{{ word }}</span>
+                {% endfor %}
+            </div>
+            <div class="profile-card-date">{{ p.updated_at | format_datetime }}</div>
+        </a>
+        {% endfor %}
+    </div>
+    <div class="see-all-wrap">
+        <a href="/profiles" class="btn-see-all">See All Personas →</a>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

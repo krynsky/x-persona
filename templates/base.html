@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Discover how any X/Twitter account is perceived by the community through list membership analysis.{% endblock %}">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}{{ app_name }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Community-curated persona analysis for X/Twitter accounts.{% endblock %}">
+    <meta property="og:type" content="website">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-brand">
+                <span class="nav-icon">✦</span>
+                <span class="nav-title">{{ app_name }}</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link{% if request.url.path == '/' %} nav-link-active{% endif %}">Home</a>
+                <a href="/profiles" class="nav-link{% if request.url.path == '/profiles' %} nav-link-active{% endif %}">Personas</a>
+                <a href="/methodology" class="nav-link{% if request.url.path == '/methodology' %} nav-link-active{% endif %}">Methodology</a>
+                {% if is_admin(request) %}
+                <a href="/admin" class="nav-link nav-link-admin{% if request.url.path.startswith('/admin') %} nav-link-active{% endif %}">Admin</a>
+                {% endif %}
+                {% block nav_extra %}{% endblock %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>{{ app_name }} &mdash; Community-curated persona analysis</span>
+            <span class="footer-dim">Powered by the X API</span>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

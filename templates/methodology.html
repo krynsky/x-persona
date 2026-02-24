@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Methodology — {{ app_name }}{% endblock %}
+{% block meta_description %}How X Persona generates persona word clouds — the analysis logic, caching system, and data sources explained.{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="methodology-header">
+        <h1 class="section-title">Methodology</h1>
+        <p class="methodology-intro">How {{ app_name }} turns X list memberships into a persona word cloud.</p>
+    </div>
+
+    <!-- Step 1: Data Source -->
+    <div class="method-card">
+        <div class="method-step">01</div>
+        <div class="method-body">
+            <h2 class="method-title">Data Source — X List Memberships</h2>
+            <p class="method-text">
+                When you analyze an account, {{ app_name }} fetches every public X list that account has been added to
+                by other users. These lists are community-curated — real people on X have grouped that account
+                alongside others they consider similar, relevant, or noteworthy.
+            </p>
+            <p class="method-text">
+                The list <strong>names</strong> are the raw signal. A list called "AI Researchers" or
+                "Web3 Founders" tells you something meaningful about how the community perceives that account.
+                The more lists with similar names, the stronger the signal.
+            </p>
+            <div class="method-note">
+                <span class="method-note-label">Note</span>
+                Only <strong>public</strong> lists are included. Private lists are not accessible via the X API.
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Word Extraction -->
+    <div class="method-card">
+        <div class="method-step">02</div>
+        <div class="method-body">
+            <h2 class="method-title">Word Extraction &amp; Scoring</h2>
+            <p class="method-text">
+                Each list name is processed to extract meaningful keywords:
+            </p>
+            <ol class="method-list">
+                <li><strong>Normalize</strong> — The name is lowercased and any punctuation (dashes, slashes, dots, etc.) is replaced with spaces.</li>
+                <li><strong>Tokenize</strong> — The cleaned text is split into individual tokens. Numbers are preserved, so a list like "web3" or "ai2024" remains intact.</li>
+                <li><strong>Filter</strong> — Tokens shorter than 3 characters are discarded. Common stop words (articles, conjunctions, pronouns, and list-specific noise like "follow", "followers", "lists") are also removed.</li>
+                <li><strong>Count</strong> — The remaining meaningful words are tallied across all list names. A word appearing in 30 different list names scores 30.</li>
+                <li><strong>Rank</strong> — The top 100 words by frequency are kept and used to build the word cloud.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Step 3: Word Cloud Rendering -->
+    <div class="method-card">
+        <div class="method-step">03</div>
+        <div class="method-body">
+            <h2 class="method-title">Word Cloud Rendering</h2>
+            <p class="method-text">
+                Word size in the cloud directly reflects frequency — a word that appears in more list names is
+                rendered larger. The scaling is proportional: the highest-scoring word sets the maximum size,
+                and all others are sized relative to it.
+            </p>
+            <p class="method-text">
+                Colors are assigned randomly from a vibrant palette on each page load, ensuring no two adjacent
+                words share the same color. Click any word to see a drill-down panel showing every list whose
+                name contains that word, along with the list owner and a direct link to view it on X.
+            </p>
+        </div>
+    </div>
+
+    <!-- Step 4: Caching -->
+    <div class="method-card">
+        <div class="method-step">04</div>
+        <div class="method-body">
+            <h2 class="method-title">Caching &amp; Freshness</h2>
+            <p class="method-text">
+                Every analysis result is cached in a local database to avoid redundant API calls. When you
+                request a profile that has already been analyzed, the cached result is served instantly — no
+                API call is made.
+            </p>
+            <div class="method-freshness">
+                <div class="freshness-item">
+                    <span class="badge-fresh">FRESH</span>
+                    <span class="freshness-desc">The cached data is less than <strong>7 days</strong> old. Requests are served from cache immediately.</span>
+                </div>
+                <div class="freshness-item">
+                    <span class="badge-stale">STALE</span>
+                    <span class="freshness-desc">The cached data is older than <strong>7 days</strong>. The next request will trigger a fresh API fetch and update the cache.</span>
+                </div>
+            </div>
+            <p class="method-text">
+                Cached lookups do not count against the rate limit. Only fresh analyses (cache misses or stale
+                refreshes) are subject to the per-hour limit.
+            </p>
+        </div>
+    </div>
+
+    <!-- Step 5: Limitations -->
+    <div class="method-card">
+        <div class="method-step">05</div>
+        <div class="method-body">
+            <h2 class="method-title">Limitations &amp; Considerations</h2>
+            <ul class="method-list">
+                <li><strong>List quality varies</strong> — The signal depends entirely on the X community. Accounts with few list memberships will produce sparse or less meaningful clouds.</li>
+                <li><strong>Recency bias</strong> — List names reflect how users described the account when they created the list, which may not reflect recent activity or changes.</li>
+                <li><strong>Language</strong> — Only alphabetic and alphanumeric tokens are extracted. List names in non-Latin scripts are not currently processed.</li>
+                <li><strong>Public lists only</strong> — Private lists are excluded, so the analysis represents a subset of all lists an account belongs to.</li>
+                <li><strong>Snapshot in time</strong> — Analyses are cached for 7 days. The cloud reflects list memberships as of the last fetch date shown on the profile.</li>
+            </ul>
+        </div>
+    </div>
+
+</section>
+{% endblock %}
