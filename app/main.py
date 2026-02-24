@@ -418,6 +418,36 @@ async def admin_dashboard(request: Request):
     })
 
 
+@app.post("/admin/save-cookies-from-tokens")
+async def admin_save_cookies_from_tokens(
+    request: Request,
+    auth_token: str = Form(...),
+    ct0: str = Form(...),
+):
+    """Generate and save cookies.json from auth_token and ct0 (admin only)."""
+    if not admin_login_required(request):
+        return RedirectResponse("/admin/login", status_code=303)
+
+    if not auth_token.strip() or not ct0.strip():
+        return RedirectResponse("/admin/settings?cookies_error=Both+auth_token+and+ct0+are+required", status_code=303)
+
+    try:
+        import json
+        cookies = [
+            {"name": "auth_token", "value": auth_token.strip(), "domain": ".twitter.com", "path": "/", "secure": True},
+            {"name": "ct0", "value": ct0.strip(), "domain": ".twitter.com", "path": "/", "secure": True},
+        ]
+        cookies_path = Path(os.getenv(
+            "COOKIES_PATH",
+            os.getenv("TWIKIT_COOKIES_PATH", str(BASE_DIR / "browser_session" / "cookies.json"))
+        ))
+        cookies_path.parent.mkdir(parents=True, exist_ok=True)
+        cookies_path.write_text(json.dumps(cookies), encoding="utf-8")
+        return RedirectResponse("/admin/settings?cookies_saved=1", status_code=303)
+    except Exception as e:
+        return RedirectResponse(f"/admin/settings?cookies_error=Failed:+{str(e)[:80]}", status_code=303)
+
+
 @app.post("/admin/upload-cookies")
 async def admin_upload_cookies(request: Request, cookies_file: UploadFile = File(...)):
     """Upload a fresh cookies.json for twikit (admin only)."""
