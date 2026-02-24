@@ -429,7 +429,7 @@ async def admin_save_cookies_from_tokens(
         return RedirectResponse("/admin/login", status_code=303)
 
     if not auth_token.strip() or not ct0.strip():
-        return RedirectResponse("/admin/settings?cookies_error=Both+auth_token+and+ct0+are+required", status_code=303)
+        return RedirectResponse("/admin?cookies_error=Both+auth_token+and+ct0+are+required", status_code=303)
 
     try:
         import json
@@ -443,9 +443,9 @@ async def admin_save_cookies_from_tokens(
         ))
         cookies_path.parent.mkdir(parents=True, exist_ok=True)
         cookies_path.write_text(json.dumps(cookies), encoding="utf-8")
-        return RedirectResponse("/admin/settings?cookies_saved=1", status_code=303)
+        return RedirectResponse("/admin?cookies_saved=1", status_code=303)
     except Exception as e:
-        return RedirectResponse(f"/admin/settings?cookies_error=Failed:+{str(e)[:80]}", status_code=303)
+        return RedirectResponse(f"/admin?cookies_error=Failed:+{str(e)[:80]}", status_code=303)
 
 
 @app.post("/admin/upload-cookies")
