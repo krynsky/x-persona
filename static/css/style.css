@@ -78,6 +78,7 @@ a:hover { color: #4db8ff; }
     height: 54px;
     width: auto;
     display: block;
+    max-width: 200px;
 }
 
 .nav-links { display: flex; gap: 8px; }
