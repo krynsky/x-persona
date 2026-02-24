@@ -237,6 +237,17 @@ async def _run_analysis(request: Request, clean: str, redirect_to_admin: bool = 
 
         user_id = user_info['id']
         memberships = await provider.get_memberships(user_id, clean)
+
+        if not memberships:
+            if redirect_to_admin:
+                return RedirectResponse(f"/admin?error=@{clean}+is+not+on+any+public+X+lists", status_code=303)
+            return templates.TemplateResponse("index.html", {
+                "request": request,
+                "error": f"@{clean} is not on any public X lists — no persona can be generated.",
+                "recent_profiles": [],
+                "app_name": APP_NAME,
+            })
+
         word_scores = extract_word_scores(memberships)
 
         async with async_session() as db:
