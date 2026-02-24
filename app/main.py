@@ -318,6 +318,15 @@ async def methodology(request: Request):
     })
 
 
+@app.get("/about", response_class=HTMLResponse)
+async def about(request: Request):
+    """About page."""
+    return templates.TemplateResponse("about.html", {
+        "request": request,
+        "app_name": APP_NAME,
+    })
+
+
 # ── API endpoint for word cloud drill-down ────
 @app.get("/api/lists-for-word")
 async def lists_for_word(username: str, word: str):

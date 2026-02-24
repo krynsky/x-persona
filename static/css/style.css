@@ -64,23 +64,20 @@ a:hover { color: #4db8ff; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 64px;
+    height: 80px;
 }
 
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
-    color: var(--text);
-    font-weight: 800;
-    font-size: 18px;
 }
 
-.nav-brand:hover { color: var(--text); }
+.nav-brand:hover { opacity: 0.85; }
 
-.nav-icon {
-    font-size: 22px;
-    color: var(--accent);
+.nav-logo {
+    height: 68px;
+    width: auto;
+    display: block;
 }
 
 .nav-links { display: flex; gap: 8px; }
@@ -1180,6 +1177,34 @@ a:hover { color: #4db8ff; }
 }
 
 .footer-dim { opacity: 0.5; }
+
+/* ── About Page ───────────────────────────── */
+.about-link {
+    color: var(--accent);
+    text-decoration: none;
+}
+.about-link:hover { text-decoration: underline; }
+
+.about-github-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+.about-github-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--border-light);
+    color: var(--text);
+}
 
 /* ── Methodology Page ─────────────────────── */
 .methodology-header {
