@@ -425,8 +425,8 @@ async def admin_upload_cookies(request: Request, cookies_file: UploadFile = File
         json.loads(contents)
 
         cookies_path = Path(os.getenv(
-            "TWIKIT_COOKIES_PATH",
-            str(BASE_DIR / "browser_session" / "cookies.json")
+            "COOKIES_PATH",
+            os.getenv("TWIKIT_COOKIES_PATH", str(BASE_DIR / "browser_session" / "cookies.json"))
         ))
         cookies_path.parent.mkdir(parents=True, exist_ok=True)
         cookies_path.write_bytes(contents)
