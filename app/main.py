@@ -478,28 +478,26 @@ async def admin_save_api_config(
     if not admin_login_required(request):
         return RedirectResponse("/admin/login", status_code=303)
 
-    env_path = BASE_DIR / ".env"
-
-    # Read current .env content
-    env_content = env_path.read_text(encoding="utf-8")
-
-    def set_env_value(content: str, key: str, value: str) -> str:
-        """Replace or append a key=value line in .env content."""
-        import re
-        pattern = rf'^{re.escape(key)}=.*$'
-        replacement = f'{key}={value}'
-        if re.search(pattern, content, flags=re.MULTILINE):
-            return re.sub(pattern, replacement, content, flags=re.MULTILINE)
-        return content + f'\n{replacement}'
-
-    env_content = set_env_value(env_content, "X_API_PROVIDER", x_api_provider)
-    env_content = set_env_value(env_content, "X_API_BEARER_TOKEN", x_api_bearer_token)
-
-    env_path.write_text(env_content, encoding="utf-8")
-
-    # Reload env vars into the running process
+    # Update env vars in the running process immediately
     os.environ["X_API_PROVIDER"] = x_api_provider
     os.environ["X_API_BEARER_TOKEN"] = x_api_bearer_token
+
+    # Also persist to .env file if it exists (local dev only)
+    env_path = BASE_DIR / ".env"
+    if env_path.exists():
+        import re
+        env_content = env_path.read_text(encoding="utf-8")
+
+        def set_env_value(content: str, key: str, value: str) -> str:
+            pattern = rf'^{re.escape(key)}=.*$'
+            replacement = f'{key}={value}'
+            if re.search(pattern, content, flags=re.MULTILINE):
+                return re.sub(pattern, replacement, content, flags=re.MULTILINE)
+            return content + f'\n{replacement}'
+
+        env_content = set_env_value(env_content, "X_API_PROVIDER", x_api_provider)
+        env_content = set_env_value(env_content, "X_API_BEARER_TOKEN", x_api_bearer_token)
+        env_path.write_text(env_content, encoding="utf-8")
 
     return RedirectResponse("/admin?saved=1", status_code=303)
 
