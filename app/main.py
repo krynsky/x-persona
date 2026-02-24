@@ -433,10 +433,10 @@ async def admin_save_cookies_from_tokens(
 
     try:
         import json
-        cookies = [
-            {"name": "auth_token", "value": auth_token.strip(), "domain": ".twitter.com", "path": "/", "secure": True},
-            {"name": "ct0", "value": ct0.strip(), "domain": ".twitter.com", "path": "/", "secure": True},
-        ]
+        cookies = {
+            "auth_token": auth_token.strip(),
+            "ct0": ct0.strip(),
+        }
         cookies_path = Path(os.getenv(
             "COOKIES_PATH",
             os.getenv("TWIKIT_COOKIES_PATH", str(BASE_DIR / "browser_session" / "cookies.json"))
