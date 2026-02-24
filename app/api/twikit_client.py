@@ -22,6 +22,7 @@ class TwikitProvider(XAPIProvider):
     async def _ensure_login(self):
         """Load cookies if not already loaded."""
         if not self._logged_in:
+            print(f"[DEBUG] Looking for cookies at: {self.cookies_path} (exists={self.cookies_path.exists()})")
             if not self.cookies_path.exists():
                 raise FileNotFoundError(
                     f"Twikit cookies not found at {self.cookies_path}. "
