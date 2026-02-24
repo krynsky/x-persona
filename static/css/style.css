@@ -623,7 +623,18 @@ a:hover { color: #4db8ff; }
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
     user-select: none;
+    position: relative;
     /* Color set via inline style by cloud.js */
+}
+
+.cloud-word-count {
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1;
+    vertical-align: super;
+    opacity: 0.6;
+    margin-left: 1px;
+    font-style: normal;
 }
 
 .cloud-word:hover {

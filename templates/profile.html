@@ -46,7 +46,7 @@ endblock %}
         <span class="cloud-word" data-word="{{ word }}" data-score="{{ score }}"
             onclick="showListsForWord('{{ word }}')"
             style="font-size: {{ [14, [36, 14 + (score * 3)] | min] | max }}px;">
-            {{ word }}
+            {{ word }}<sup class="cloud-word-count">{{ score }}</sup>
         </span>
         {% endfor %}
     </div>
