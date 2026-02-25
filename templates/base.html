@@ -10,6 +10,14 @@
     <meta property="og:title" content="{% block og_title %}{{ app_name }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Community-curated persona analysis for X/Twitter accounts.{% endblock %}">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="{{ request.base_url }}static/img/logo.png">
+    <meta property="og:url" content="{{ request.url }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ app_name }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Community-curated persona analysis for X/Twitter accounts.{% endblock %}">
+    <meta name="twitter:image" content="{{ request.base_url }}static/img/logo.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

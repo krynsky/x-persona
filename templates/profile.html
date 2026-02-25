@@ -4,8 +4,9 @@
 {% block meta_description %}See how @{{ profile.username }} is categorized across {{ profile.membership_count }} X
 community lists.{% endblock %}
 {% block og_title %}@{{ profile.username }} — {{ app_name }}{% endblock %}
-{% block og_description %}{{ profile.membership_count }} list memberships analyzed. See the interactive word cloud.{%
-endblock %}
+{% block og_description %}{{ profile.membership_count }} list memberships analyzed. See the interactive word cloud.{% endblock %}
+{% block twitter_title %}@{{ profile.username }} — {{ app_name }}{% endblock %}
+{% block twitter_description %}{{ profile.membership_count }} list memberships analyzed. See the interactive word cloud.{% endblock %}
 
 {% block content %}
 {% if error %}
