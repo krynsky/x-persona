@@ -8,7 +8,9 @@
     <p class="hero-sub">See how the X community categorizes any account<br>through their list memberships.</p>
 
     {% if error %}
-    <div class="alert alert-error">⚠️ {{ error }}</div>
+    <div class="alert alert-error">⚠️ {{ error }}
+        {% if error_link %}<a href="{{ error_link }}" target="_blank" class="alert-link">{{ error_link_label }}</a>{% endif %}
+    </div>
     {% endif %}
     {% if info %}
     <div class="alert alert-info">
@@ -49,7 +51,7 @@
             </button>
         </div>
     </form>
-    <p class="hero-hint-sub">Don't see an account? Request it and we'll generate the persona.<br>Please note that your request will go into a queue and should be processed within 24 hours.</p>
+    <p class="hero-hint-sub">Don't see an account? Request it and we'll generate the persona.<br>Please note that your request will go into a queue and should be processed within 24 hours.<br>Accounts must be on at least 10 public X lists to generate a meaningful persona.</p>
     {% endif %}
 
 </div>

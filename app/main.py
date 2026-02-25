@@ -166,6 +166,15 @@ async def request_profile(request: Request, username: str = Form(...)):
                 "recent_profiles": [],
                 "app_name": APP_NAME,
             })
+        if len(memberships) < 10:
+            return templates.TemplateResponse("index.html", {
+                "request": request,
+                "error": f"@{clean} is only on {len(memberships)} public list{'s' if len(memberships) != 1 else ''} — a minimum of 10 is required for a meaningful persona. View their list memberships on X.",
+                "error_link": f"https://x.com/{clean}/lists/memberships",
+                "error_link_label": "View list memberships →",
+                "recent_profiles": [],
+                "app_name": APP_NAME,
+            })
     except Exception as e:
         return templates.TemplateResponse("index.html", {
             "request": request,
