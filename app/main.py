@@ -147,7 +147,35 @@ async def request_profile(request: Request, username: str = Form(...)):
                 "app_name": APP_NAME,
             })
 
-        # Add to request queue (no Profile record created)
+    # Validate the account exists and has list memberships before queuing
+    try:
+        provider = get_provider()
+        user_info = await provider.get_user_info(clean)
+        if not user_info or not user_info.get('id'):
+            return templates.TemplateResponse("index.html", {
+                "request": request,
+                "error": f"Could not find @{clean} on X. Please check the username and try again.",
+                "recent_profiles": [],
+                "app_name": APP_NAME,
+            })
+        memberships = await provider.get_memberships(user_info['id'], clean)
+        if not memberships:
+            return templates.TemplateResponse("index.html", {
+                "request": request,
+                "error": f"@{clean} is not on any public X lists — no persona can be generated.",
+                "recent_profiles": [],
+                "app_name": APP_NAME,
+            })
+    except Exception as e:
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            "error": "Unable to validate account right now. Please try again later.",
+            "recent_profiles": [],
+            "app_name": APP_NAME,
+        })
+
+    # All checks passed — add to request queue
+    async with async_session() as db:
         db.add(ProfileRequest(username=clean))
         await db.commit()
 
