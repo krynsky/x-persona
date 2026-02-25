@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}All Profiles — {{ app_name }}{% endblock %}
+{% block title %}All Personas — {{ app_name }}{% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="section-header">
-        <h1 class="section-title">All Analyzed Profiles</h1>
-        <span class="section-count">{{ profiles | length }} profiles</span>
+        <h1 class="section-title">All Personas</h1>
+        <span class="section-count" id="persona-count">{{ profiles | length }} personas</span>
     </div>
 
     {% if profiles %}
-    <div class="profile-grid">
+    <div style="margin-bottom: 24px;">
+        <input type="text" id="persona-search" placeholder="Search by username or keyword..." class="config-input" style="max-width: 400px;" autocomplete="off">
+    </div>
+    <div id="no-results" style="display:none; color: var(--text-dim); margin-bottom: 24px;">No personas match your search.</div>
+    <div class="profile-grid" id="persona-grid">
         {% for p in profiles %}
-        <a href="/@{{ p.username }}" class="profile-card">
+        <a href="/@{{ p.username }}" class="profile-card" data-username="{{ p.username }}" data-words="{{ (p.word_scores | dictsort(by='value', reverse=true))[:10] | map(attribute=0) | join(' ') }}">
             <div class="profile-card-header">
                 <div class="profile-card-identity">
                     {% if p.profile_image_url %}
@@ -44,4 +48,30 @@
     </div>
     {% endif %}
 </section>
+{% endblock %}
+
+{% block scripts %}
+{% if profiles %}
+<script>
+const searchInput = document.getElementById('persona-search');
+const cards = document.querySelectorAll('#persona-grid .profile-card');
+const noResults = document.getElementById('no-results');
+const countEl = document.getElementById('persona-count');
+const total = cards.length;
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase().replace(/^@/, '');
+    let visible = 0;
+    cards.forEach(card => {
+        const username = card.dataset.username || '';
+        const words = card.dataset.words || '';
+        const match = !q || username.includes(q) || words.includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    countEl.textContent = q ? `${visible} of ${total} personas` : `${total} personas`;
+    noResults.style.display = (visible === 0 && q) ? 'block' : 'none';
+});
+</script>
+{% endif %}
 {% endblock %}
