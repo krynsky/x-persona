@@ -350,8 +350,14 @@ async def view_profile(request: Request, username: str):
 
 
 @app.get("/profiles", response_class=HTMLResponse)
-async def browse_profiles(request: Request):
-    """Browse all analyzed profiles."""
+async def browse_profiles_redirect(request: Request):
+    """Redirect old /profiles URL to /personas."""
+    return RedirectResponse("/personas", status_code=301)
+
+
+@app.get("/personas", response_class=HTMLResponse)
+async def browse_personas(request: Request):
+    """Browse all analyzed personas."""
     async with async_session() as db:
         result = await db.execute(
             select(Profile).order_by(Profile.updated_at.desc())

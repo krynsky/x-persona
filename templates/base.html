@@ -32,7 +32,7 @@
             </a>
             <div class="nav-links">
                 <a href="/" class="nav-link{% if request.url.path == '/' %} nav-link-active{% endif %}">Home</a>
-                <a href="/profiles" class="nav-link{% if request.url.path == '/profiles' %} nav-link-active{% endif %}">Personas</a>
+                <a href="/personas" class="nav-link{% if request.url.path == '/personas' %} nav-link-active{% endif %}">Personas</a>
                 <a href="/methodology" class="nav-link{% if request.url.path == '/methodology' %} nav-link-active{% endif %}">Methodology</a>
                 <a href="/about" class="nav-link{% if request.url.path == '/about' %} nav-link-active{% endif %}">About</a>
                 {% if is_admin(request) %}
