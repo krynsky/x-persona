@@ -4,6 +4,7 @@ Uses browser cookies for authentication — NOT suitable for production.
 """
 import os
 from pathlib import Path
+from app.api import twikit_patch  # noqa: F401 — monkey-patches twikit
 from twikit import Client
 from app.api.provider import XAPIProvider
 
