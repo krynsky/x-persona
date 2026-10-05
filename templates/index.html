@@ -21,7 +21,14 @@
     </div>
     {% endif %}
 
-    {% if is_admin(request) %}
+    {% if static_site %}
+    {# Read-only showcase: no submissions #}
+    <div class="showcase-cta">
+        <a href="/personas" class="search-btn" style="display: inline-block; text-decoration: none;">Browse Personas</a>
+        <a href="{{ github_url }}" target="_blank" rel="noopener" class="btn-see-all" style="margin-left: 8px;">Run it yourself on GitHub ↗</a>
+    </div>
+    <p class="hero-hint-sub">This site is a showcase of personas already analyzed.<br>Want to analyze your own account? {{ app_name }} is open source &mdash; <a href="{{ github_url }}" target="_blank" rel="noopener" class="alert-link">grab the code on GitHub</a> and run it yourself.</p>
+    {% elif is_admin(request) %}
     {# Admin: full analyze form #}
     <form action="/analyze" method="POST" class="search-form" id="analyze-form">
         <div class="search-box">
@@ -57,6 +64,7 @@
 </div>
 
 {% block scripts %}
+{% if not static_site %}
 <script>
 document.getElementById('analyze-form').addEventListener('submit', function() {
     const btn = document.getElementById('analyze-btn');
@@ -64,6 +72,7 @@ document.getElementById('analyze-form').addEventListener('submit', function() {
     btn.disabled = true;
 });
 </script>
+{% endif %}
 {% endblock %}
 
 {% if recent_profiles %}

@@ -1,13 +1,60 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methodology — X Persona</title>
+    <meta name="description" content="How X Persona generates persona word clouds — the analysis logic, caching system, and data sources explained.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="X Persona">
+    <meta property="og:description" content="Community-curated persona analysis for X/Twitter accounts.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://x-persona.vercel.app/static/img/logo.png">
+    <meta property="og:url" content="https://x-persona.vercel.app/methodology">
 
-{% block title %}Methodology — {{ app_name }}{% endblock %}
-{% block meta_description %}How X Persona generates persona word clouds — the analysis logic, caching system, and data sources explained.{% endblock %}
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="X Persona">
+    <meta name="twitter:description" content="Community-curated persona analysis for X/Twitter accounts.">
+    <meta name="twitter:image" content="https://x-persona.vercel.app/static/img/logo.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
 
-{% block content %}
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-brand">
+                <img src="/static/img/logo.png" alt="X Persona" class="nav-logo">
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/personas" class="nav-link">Personas</a>
+                <a href="/methodology" class="nav-link nav-link-active">Methodology</a>
+                <a href="/about" class="nav-link">About</a>
+                
+                
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        
 <section class="section">
     <div class="methodology-header">
         <h1 class="section-title">Methodology</h1>
-        <p class="methodology-intro">How {{ app_name }} turns X list memberships into a persona word cloud.</p>
+        <p class="methodology-intro">How X Persona turns X list memberships into a persona word cloud.</p>
     </div>
 
     <!-- Step 1: Data Source -->
@@ -16,7 +63,7 @@
         <div class="method-body">
             <h2 class="method-title">Data Source — X List Memberships</h2>
             <p class="method-text">
-                When you analyze an account, {{ app_name }} fetches every public X list that account has been added to
+                When you analyze an account, X Persona fetches every public X list that account has been added to
                 by other users. These lists are community-curated — real people on X have grouped that account
                 alongside others they consider similar, relevant, or noteworthy.
             </p>
@@ -72,34 +119,14 @@
     <div class="method-card">
         <div class="method-step">04</div>
         <div class="method-body">
-            {% if static_site %}
+            
             <h2 class="method-title">Snapshots</h2>
             <p class="method-text">
                 This site is a read-only showcase. Each persona is a snapshot taken on the date shown on its page
                 ("Analyzed" date), so list memberships may have changed on X since then. To analyze an account
-                yourself, <a href="{{ github_url }}" target="_blank" rel="noopener" class="about-link">run {{ app_name }} from GitHub</a>.
+                yourself, <a href="https://github.com/krynsky/x-persona" target="_blank" rel="noopener" class="about-link">run X Persona from GitHub</a>.
             </p>
-            {% else %}
-            <p class="method-text">
-                Every analysis result is cached in a local database to avoid redundant API calls. When you
-                request a profile that has already been analyzed, the cached result is served instantly — no
-                API call is made.
-            </p>
-            <div class="method-freshness">
-                <div class="freshness-item">
-                    <span class="badge-fresh">FRESH</span>
-                    <span class="freshness-desc">The cached data is less than <strong>7 days</strong> old. Requests are served from cache immediately.</span>
-                </div>
-                <div class="freshness-item">
-                    <span class="badge-stale">STALE</span>
-                    <span class="freshness-desc">The cached data is older than <strong>7 days</strong>. The next request will trigger a fresh API fetch and update the cache.</span>
-                </div>
-            </div>
-            <p class="method-text">
-                Cached lookups do not count against the rate limit. Only fresh analyses (cache misses or stale
-                refreshes) are subject to the per-hour limit.
-            </p>
-            {% endif %}
+            
         </div>
     </div>
 
@@ -120,4 +147,16 @@
     </div>
 
 </section>
-{% endblock %}
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>X Persona &mdash; Community-curated persona analysis</span>
+            <span class="footer-dim">Powered by the X API</span>
+        </div>
+    </footer>
+
+    
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Personas — X Persona</title>
+    <meta name="description" content="Discover how any X/Twitter account is perceived by the community through list membership analysis.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="X Persona">
+    <meta property="og:description" content="Community-curated persona analysis for X/Twitter accounts.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://x-persona.vercel.app/static/img/logo.png">
+    <meta property="og:url" content="https://x-persona.vercel.app/personas">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="X Persona">
+    <meta name="twitter:description" content="Community-curated persona analysis for X/Twitter accounts.">
+    <meta name="twitter:image" content="https://x-persona.vercel.app/static/img/logo.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-brand">
+                <img src="/static/img/logo.png" alt="X Persona" class="nav-logo">
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/personas" class="nav-link nav-link-active">Personas</a>
+                <a href="/methodology" class="nav-link">Methodology</a>
+                <a href="/about" class="nav-link">About</a>
+                
+                
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        
+<section class="section">
+    <div class="section-header">
+        <h1 class="section-title">All Personas</h1>
+        <span class="section-count" id="persona-count">3 personas</span>
+    </div>
+
+    
+    <div style="margin-bottom: 24px;">
+        <input type="text" id="persona-search" placeholder="Search by username or keyword..." class="config-input" style="max-width: 400px;" autocomplete="off">
+    </div>
+    <div id="no-results" style="display:none; color: var(--text-dim); margin-bottom: 24px;">No personas match your search.</div>
+    <div class="profile-grid" id="persona-grid">
+        
+        <a href="/@elonmusk" class="profile-card" data-username="elonmusk" data-words="news elon feed musk chronological timeline big chrono follows space">
+            <div class="profile-card-header">
+                <div class="profile-card-identity">
+                    
+                    <img src="https://pbs.twimg.com/profile_images/2008546467615580160/57KcqsTA_400x400.jpg" alt="@elonmusk" class="profile-card-avatar">
+                    
+                    <span class="profile-card-at">@elonmusk</span>
+                </div>
+                <span class="profile-card-badge">509 lists</span>
+            </div>
+            
+            <div class="profile-card-words">
+                
+                <span class="mini-tag">news</span>
+                
+                <span class="mini-tag">elon</span>
+                
+                <span class="mini-tag">feed</span>
+                
+                <span class="mini-tag">musk</span>
+                
+                <span class="mini-tag">chronological</span>
+                
+            </div>
+            <div class="profile-card-date">February 24, 2026 at 12:30 AM UTC</div>
+        </a>
+        
+        <a href="/@scobleizer" class="profile-card" data-username="scobleizer" data-words="tech news insights robotics crypto technology tesla builders top influencers">
+            <div class="profile-card-header">
+                <div class="profile-card-identity">
+                    
+                    <img src="https://pbs.twimg.com/profile_images/1915614118876504066/zVnfpAMf_400x400.jpg" alt="@scobleizer" class="profile-card-avatar">
+                    
+                    <span class="profile-card-at">@scobleizer</span>
+                </div>
+                <span class="profile-card-badge">501 lists</span>
+            </div>
+            
+            <p class="profile-card-bio">San Francisco/Silicon Valley AI | Robots, holodecks, BCIs, analysis of new things | Ex-Microsoft, Rackspace, Fast Company | Wrote eight books about the future.</p>
+            
+            <div class="profile-card-words">
+                
+                <span class="mini-tag">tech</span>
+                
+                <span class="mini-tag">news</span>
+                
+                <span class="mini-tag">insights</span>
+                
+                <span class="mini-tag">robotics</span>
+                
+                <span class="mini-tag">crypto</span>
+                
+            </div>
+            <div class="profile-card-date">February 24, 2026 at 12:30 AM UTC</div>
+        </a>
+        
+        <a href="/@krynsky" class="profile-card" data-username="krynsky" data-words="tech drupal social people media quantified self friendfeed wordpress friendfeeders">
+            <div class="profile-card-header">
+                <div class="profile-card-identity">
+                    
+                    <img src="https://pbs.twimg.com/profile_images/2003605607665008641/h1gcyaGH_400x400.jpg" alt="@krynsky" class="profile-card-avatar">
+                    
+                    <span class="profile-card-at">@krynsky</span>
+                </div>
+                <span class="profile-card-badge">279 lists</span>
+            </div>
+            
+            <p class="profile-card-bio">#DigitalLegacy evangelist at @digitallegacyus | Knowledge Architect | Learning &amp; testing AI tech | More info at https://t.co/5vav7i4GW4</p>
+            
+            <div class="profile-card-words">
+                
+                <span class="mini-tag">tech</span>
+                
+                <span class="mini-tag">drupal</span>
+                
+                <span class="mini-tag">social</span>
+                
+                <span class="mini-tag">people</span>
+                
+                <span class="mini-tag">media</span>
+                
+            </div>
+            <div class="profile-card-date">February 24, 2026 at 12:29 AM UTC</div>
+        </a>
+        
+    </div>
+    
+</section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>X Persona &mdash; Community-curated persona analysis</span>
+            <span class="footer-dim">Powered by the X API</span>
+        </div>
+    </footer>
+
+    
+
+<script>
+const searchInput = document.getElementById('persona-search');
+const cards = document.querySelectorAll('#persona-grid .profile-card');
+const noResults = document.getElementById('no-results');
+const countEl = document.getElementById('persona-count');
+const total = cards.length;
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase().replace(/^@/, '');
+    let visible = 0;
+    cards.forEach(card => {
+        const username = card.dataset.username || '';
+        const words = card.dataset.words || '';
+        const match = !q || username.includes(q) || words.includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    countEl.textContent = q ? `${visible} of ${total} personas` : `${total} personas`;
+    noResults.style.display = (visible === 0 && q) ? 'block' : 'none';
+});
+</script>
+
+
+</body>
+</html>

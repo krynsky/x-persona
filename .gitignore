@@ -3,6 +3,7 @@
 
 # Database - contains user data, excluded from repo
 data/
+!site/data/
 *.db
 *.sqlite
 *.sqlite3
@@ -35,3 +36,6 @@ Thumbs.db
 # Helper scripts
 write_files.ps1
 *.swo
+
+# Vercel CLI link
+.vercel/
