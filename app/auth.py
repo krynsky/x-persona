@@ -8,7 +8,9 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from fastapi import Request, HTTPException
 from fastapi.responses import RedirectResponse
 
-SECRET_KEY = os.getenv("SECRET_KEY", "change-me-to-a-random-secret-string")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY environment variable is not set")
 SESSION_MAX_AGE = 86400 * 7  # 7 days
 
 serializer = URLSafeTimedSerializer(SECRET_KEY)
