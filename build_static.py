@@ -25,7 +25,7 @@ OUT_DIR = BASE_DIR / "site"
 DEFAULT_DB = BASE_DIR / "data" / "xpersona.db"
 
 APP_NAME = os.getenv("APP_NAME", "X Persona")
-SITE_URL = os.getenv("SITE_URL", "https://x-persona.vercel.app").rstrip("/")
+SITE_URL = os.getenv("SITE_URL", "https://xpersona.krynsky.com").rstrip("/")
 GITHUB_URL = "https://github.com/krynsky/x-persona"
 
 

@@ -82,7 +82,7 @@ X credentials in production. Analysis and admin run only on your local machine.
    ```bash
    python build_static.py            # reads data/xpersona.db, writes ./site
    # or: python build_static.py path/to/other.db
-   # set SITE_URL=https://your-domain.com to fix OG/canonical URLs
+   # SITE_URL env var overrides the default (https://xpersona.krynsky.com) for OG/canonical URLs
    ```
    To seed from an existing live deployment instead, run `python import_from_live.py https://your-site.com`
    (writes `data/live_snapshot.db`) and then `python build_static.py data/live_snapshot.db`.
