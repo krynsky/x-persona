@@ -118,8 +118,6 @@ x-persona/
 ├── .env.example             # Configuration template
 ├── build_static.py          # Builds the read-only site into ./site
 ├── site/                    # Generated static site (deployed to Vercel)
-├── Procfile                 # Legacy Railway start command
-├── railway.toml             # Legacy Railway build config
 └── requirements.txt         # Python dependencies
 ```
 
