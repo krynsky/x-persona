@@ -2,7 +2,9 @@
 
 > ✦ **v1.0.0** — Community-curated persona analysis for X/Twitter accounts
 
-A public-facing web application that analyzes any X account's community perception by examining their list memberships. Enter a username to generate an interactive word cloud showing how the X community categorizes that account.
+Analyzes an X account's community perception by examining their list memberships and generates an interactive word cloud showing how the X community categorizes that account.
+
+**Live showcase:** [xpersona.krynsky.com](https://xpersona.krynsky.com) is a read-only static site of already-analyzed personas. To analyze accounts yourself, run the app locally (below) — it's open source.
 
 ## ✨ Features
 
@@ -11,11 +13,12 @@ A public-facing web application that analyzes any X account's community percepti
 - **👤 Profile Pages**: Avatar, bio, membership count, and full list table per account
 - **📋 List Filter**: Search/filter the full membership table on each profile page
 - **📊 Personas Directory**: Browse all analyzed accounts with avatar and bio preview
-- **📬 Public Requests**: Visitors can request an account — admin analyzes on demand
+- **📬 Request Queue** (local app): Optional public request form; the admin analyzes on demand
 - **🔐 Admin Dashboard**: Analyze profiles, manage the request queue, refresh cached data, upload twikit cookies
-- **💾 Smart Caching**: Configurable TTL (default 7 days) — repeat lookups skip the API entirely
-- **⚡ Dual API Support**: Twikit (cookie-based, free) for local dev; Official X API v2 (pay-as-you-go) for production
-- **🛡️ Rate Limiting**: Configurable per-hour limits on public requests
+- **💾 Smart Caching** (local app): Configurable TTL (default 7 days) — repeat lookups skip the API entirely
+- **⚡ Dual API Support**: Twikit (cookie-based, free) or the official X API v2 (pay-as-you-go)
+- **🛡️ Rate Limiting** (local app): Configurable per-hour limits on public requests
+- **🚀 Static Export**: `build_static.py` turns your local DB into a read-only site hosted on Vercel
 - **🎨 Dark UI**: Clean dark design with Inter font
 
 ## 🚀 Quick Start
@@ -59,7 +62,7 @@ Open **http://localhost:8000** in your browser.
 | Mode | Setting | Auth | Use Case |
 |------|---------|------|----------|
 | **Twikit** | `X_API_PROVIDER=twikit` | Browser cookies (`browser_session/cookies.json`) | Local dev, free |
-| **Official** | `X_API_PROVIDER=official` | Bearer Token | Production, pay-as-you-go (~$0.008/request) |
+| **Official** | `X_API_PROVIDER=official` | Bearer Token | Pay-as-you-go (~$0.008/request) |
 
 > ⚠️ **Note:** The official X API can be expensive for accounts with many list memberships. @elonmusk (553 lists) cost ~$4. Twikit is recommended for personal/dev use.
 
@@ -127,7 +130,8 @@ x-persona/
 - Session cookies are **signed** with `itsdangerous`
 - All secrets loaded from environment variables — never hardcoded
 - `.env`, database, and cookies files are excluded from the repo via `.gitignore`
-- Public users can only request profiles — analysis is admin-only
+- In the local app, public users can only request profiles — analysis is admin-only
+- The deployed site is fully static: no server, database, or credentials exist in production
 
 ---
 
