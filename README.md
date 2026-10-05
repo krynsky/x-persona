@@ -84,6 +84,8 @@ X credentials in production. Analysis and admin run only on your local machine.
    # or: python build_static.py path/to/other.db
    # set SITE_URL=https://your-domain.com to fix OG/canonical URLs
    ```
+   To seed from an existing live deployment instead, run `python import_from_live.py https://your-site.com`
+   (writes `data/live_snapshot.db`) and then `python build_static.py data/live_snapshot.db`.
 3. Commit and push `site/`, or deploy it directly with `cd site && vercel deploy --prod`.
 4. In Vercel, import the repo with **Root Directory = `site`**, Framework Preset = *Other*, and no build command.
 
